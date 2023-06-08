@@ -4,7 +4,7 @@ Public code release for Mill & Cole 2023: "Neural representation dynamics reveal
 
 Author: Ravi Mill (rdm146@rutgers.edu)
 
-Includes the Matlab (v2019a) function quantify_rule_type_subject.m, which quantifies the strength of compositional and conjunctive neural representations in block-to-block fMRI regional activations evoked by C-PRO2 paradigm. The remaining files included with the repository are required for the function to run (see details below).
+Includes the Matlab (v2019a) function quantify_rule_type_subject.m, which quantifies the strength of compositional and conjunctive neural representations in block-to-block fMRI regional activations evoked by the C-PRO2 paradigm. The remaining files included with the repository are required for the function to run (see details below).
 
 Top of the main function provides a detailed description of the function, as well as input and output variables. 
 
