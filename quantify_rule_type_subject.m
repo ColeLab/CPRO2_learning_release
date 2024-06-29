@@ -1,7 +1,7 @@
 function quantify_rule_type_subject(subj_id)
 
 %Author: Ravi Mill, rdm146@rutgers.edu
-%Last Update: June 7th 2023
+%Last Update: June 29th 2024
 
 %Accompanies Mill & Cole (2023): "Neural representation dynamics reveal computational 
 %principles of cognitive task learning"
@@ -39,14 +39,24 @@ function quantify_rule_type_subject(subj_id)
 %3. (Included) CAB-NP network partition .dlabel file from https://github.com/ColeLab/ColeAnticevicNetPartition
 %   that links vertex/voxel data to affiliated Glasser atlas regions:
 %   CortexSubcortex_ColeAnticevic_NetPartition_wSubcorGSR_parcels_LR.dlabel.nii
+%4. Example data: i) Behavioral data for one subject is provided in the
+%   data/ subdirectory. ii) fMRI vertexwise task activation data for one
+%   subject, which also needs to be stored in the data/ subdirectory, but
+%   needs to be downloaded from the access link specified in the github repo
+%   description.
 
-%See section below for paths and parameters, *=paths to the data set by the user
-%See lines 145-173 for manual treatment of subjects with missing/partial runs
+%See section below for paths and parameters, *=paths that can be modified by 
+%the  user to run the code on their own data
+%See lines 159-184 for manual treatment of subjects with missing/partial runs
 
 %% Set up paths, directories etc
 
+%*set path to gifti toolbox which reads/writes cifti; *also make sure wb_command is in your path
+addpath('gifti-1.6');
+
 %*set path to base directory (where input data are stored and where output data will be saved)
-basedir='/projectsn/f_mc1689_1/CPRO2_learning/';
+%basedir='/projectsn/f_mc1689_1/CPRO2_learning/';
+basedir='data/';
 
 %list of all subjects (for information's sake)
 subjects=[1,2,3,5,6,7,9,10,11,13,14,16,17,18,21,22,23,24,26,29,30,31,32,34,35,36,37,38,39,41,42,43,44,45,46,48,49,50,51,53,54,55,56,57];
@@ -54,7 +64,8 @@ num_subs=length(subj_id);
 
 %*set path to behavioral data (excel file containing Eprime output for all subjects)
 %used here to identify tasks and rules for each block across Practiced and Test sessions
-behav_xls=[basedir,'/data/results/CPRO2_fMRI_EEG_main.xlsx'];
+%behav_xls=[basedir,'/data/results/CPRO2_fMRI_EEG_main.xlsx'];
+behav_xls=[basedir,'behav_release.xlsx'];
 
 %set number of regions (based on CAB-NP network partition)
 num_regions=718; %360 surface, 358 subcortex
@@ -62,7 +73,8 @@ num_regions=718; %360 surface, 358 subcortex
 %set path to directory with preprocessed fMRI data (vertex/voxel-level, in hdf5
 %format) for each subject
 %num total vertices/voxels=91282
-vertex_dir=[basedir,'/data/preprocessed/MRI/vertexWise/'];
+%vertex_dir=[basedir,'/data/preprocessed/MRI/vertexWise/'];
+vertex_dir=basedir;
 vertex_suff='_glmOutput_vertex_data.h5'; %suffix for each subject file
 
 %input file keys used to reference h5 files with post-GLM output (activity betas)
@@ -97,8 +109,10 @@ acc_col=120; %behavioral acc
 rt_col=132;
 
 %output directory
-outputdir=[basedir,'/data/results/Prac_Conjunctive_robust_publicRelease/'];
+%outputdir=[basedir,'/data/results/Prac_Conjunctive_robust_publicRelease/'];
+outputdir=[basedir,'/results/'];
 if ~exist(outputdir);mkdir(outputdir);end
+
 %where subjects' data will be saved
 subdir=[outputdir,'/Regionwise/'];
 if ~exist(subdir);mkdir(subdir);end
@@ -199,7 +213,7 @@ for i=1:length(subj_id)
         trial_count=trial_count+3;
     end
     
-     %pull out behavioral accuracy and RT for Prac session
+    %pull out behavioral accuracy and RT for Prac session
     sub_acc=cell2mat(sub_edat_prac(:,acc_col));
     sub_rt=sub_edat_prac(:,rt_col);
     %need to convert char nans to number - these appear in RT column as
